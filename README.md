@@ -19,9 +19,23 @@ The application is deployed and publicly accessible on Render:
 
 ---
 
+## 🚀 What Makes This Project Different
+
+- **Multi-Format PII Redaction:** Supports sensitive data detection and format-preserving redaction across uploaded documents (including Microsoft Word `.docx` paragraphs, tables, and nested cells) rather than only plain text.
+- **Multiple PII Categories:** Detects and redacts 9 distinct PII categories: `PERSON`, `EMAIL`, `PHONE`, `COMPANY`, `ADDRESS`, `SSN`, `CREDIT_CARD`, `DOB`, and `IP_ADDRESS`.
+- **Hybrid Detection Approach:** Combines deterministic rule/pattern-based validation (regexes, Luhn checksums, context windows) with spaCy statistical NLP Named Entity Recognition (NER).
+- **Privacy-Focused Processing:** Designed to automatically identify and redact sensitive information before documents are shared or processed further, with zero raw temporary data retention.
+- **Web UI + CLI Support:** Provides both a browser-based dashboard with drag-and-drop file upload and a command-line workflow for batch automation.
+- **REST API:** FastAPI-based endpoints make the redaction functionality easy to integrate into other applications and automated workflows.
+- **Evaluation & Testing:** Includes an automated test suite and an evaluation report against ground-truth support tickets to validate detection and redaction behavior.
+- **Production Deployment:** Publicly deployed using Render with a live interactive demo.
+
+---
+
 ## Table of Contents
 
 - [Live Demo](#-live-demo)
+- [What Makes This Project Different](#-what-makes-this-project-different)
 - [Key Features](#key-features)
 - [Supported PII Categories](#supported-pii-categories)
 - [Tech Stack](#tech-stack)
