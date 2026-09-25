@@ -16,7 +16,6 @@ An enterprise-ready, format-preserving Personally Identifiable Information (PII)
 The application is deployed and publicly accessible on Render:
 
 👉 **Live Web Application:** [https://pii-redaction-tool-jfdr.onrender.com](https://pii-redaction-tool-jfdr.onrender.com)  
-🏥 **Health Check API:** [https://pii-redaction-tool-jfdr.onrender.com/api/health](https://pii-redaction-tool-jfdr.onrender.com/api/health)
 
 > **Note:** The live deployment runs on Render's free tier. If the service has been idle, the initial request may take a few moments to spin up.
 
@@ -491,6 +490,3 @@ The application is completely self-contained and does not require third-party AP
 
 ---
 
-## License
-
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for full details.
