@@ -1,0 +1,204 @@
+{
+  "description": "Benchmark evaluation dataset for PII Redaction Tool containing support ticket logs.",
+  "version": "1.0.0",
+  "documents": [
+    {
+      "id": "ticket_01_billing_dispute",
+      "text": "Ticket ID: TKT-1023 | Priority: High | Department: Customer Support\nCustomer Name: John Doe\nEmail: john.doe@gmail.com\nPhone: +91 9876543210\nCompany: Acme Corporation\nAddress: 123 Main Street, Suite 400, Seattle, WA 98101\nDOB: 12/05/1990\nSSN: 123-45-6789\nCredit Card: 4111 1111 1111 1111\nClient IP: 192.168.1.10\nDetails: Customer John Doe reported unauthorized transaction on invoice INV-2026-1001 for Order ID ORD-123456. Ticket created on 14/03/2026. Non-PII test IP 999.300.1.2 and invalid card 4111 1111 1111 1112 were ignored.",
+      "ground_truth": [
+        {
+          "type": "PERSON",
+          "text": "John Doe",
+          "start": 83,
+          "end": 91
+        },
+        {
+          "type": "EMAIL",
+          "text": "john.doe@gmail.com",
+          "start": 99,
+          "end": 117
+        },
+        {
+          "type": "PHONE",
+          "text": "+91 9876543210",
+          "start": 125,
+          "end": 139
+        },
+        {
+          "type": "COMPANY",
+          "text": "Acme Corporation",
+          "start": 149,
+          "end": 165
+        },
+        {
+          "type": "ADDRESS",
+          "text": "123 Main Street, Suite 400, Seattle, WA 98101",
+          "start": 175,
+          "end": 220
+        },
+        {
+          "type": "DOB",
+          "text": "12/05/1990",
+          "start": 226,
+          "end": 236
+        },
+        {
+          "type": "SSN",
+          "text": "123-45-6789",
+          "start": 242,
+          "end": 253
+        },
+        {
+          "type": "CREDIT_CARD",
+          "text": "4111 1111 1111 1111",
+          "start": 267,
+          "end": 286
+        },
+        {
+          "type": "IP_ADDRESS",
+          "text": "192.168.1.10",
+          "start": 298,
+          "end": 310
+        },
+        {
+          "type": "PERSON",
+          "text": "John Doe",
+          "start": 329,
+          "end": 337
+        }
+      ]
+    },
+    {
+      "id": "ticket_02_account_escalation",
+      "text": "Ticket ID: TKT-1024 | Status: Escalated | Queue: Enterprise Billing\nClient: Rashmi Patil\nWork Email: rashmi.patil@example.com\nContact Number: 9876543210\nOrganization: Global Technologies Ltd.\nMailing Address: 42 Park Avenue, Mumbai, Maharashtra 400001\nDate of Birth: 1985-08-22\nNational ID / SSN: 456-78-1234\nActive Card: 5555 4444 3333 2222\nSession IP Address: 10.0.4.15\nNotes: Employee EMP12345 verified Rashmi Patil credentials on 2026-05-12. Everything verified.",
+      "ground_truth": [
+        {
+          "type": "PERSON",
+          "text": "Rashmi Patil",
+          "start": 76,
+          "end": 88
+        },
+        {
+          "type": "EMAIL",
+          "text": "rashmi.patil@example.com",
+          "start": 101,
+          "end": 125
+        },
+        {
+          "type": "PHONE",
+          "text": "9876543210",
+          "start": 142,
+          "end": 152
+        },
+        {
+          "type": "COMPANY",
+          "text": "Global Technologies Ltd.",
+          "start": 167,
+          "end": 191
+        },
+        {
+          "type": "ADDRESS",
+          "text": "42 Park Avenue, Mumbai, Maharashtra 400001",
+          "start": 209,
+          "end": 251
+        },
+        {
+          "type": "DOB",
+          "text": "1985-08-22",
+          "start": 267,
+          "end": 277
+        },
+        {
+          "type": "SSN",
+          "text": "456-78-1234",
+          "start": 297,
+          "end": 308
+        },
+        {
+          "type": "CREDIT_CARD",
+          "text": "5555 4444 3333 2222",
+          "start": 322,
+          "end": 341
+        },
+        {
+          "type": "IP_ADDRESS",
+          "text": "10.0.4.15",
+          "start": 362,
+          "end": 371
+        },
+        {
+          "type": "PERSON",
+          "text": "Rashmi Patil",
+          "start": 406,
+          "end": 418
+        }
+      ]
+    },
+    {
+      "id": "ticket_03_technical_access",
+      "text": "Ticket ID: TKT-1025 | Tier: L2 Infrastructure Support\nRequester: Alex Mercer\nDirect Email: alex.mercer@cloudcorp.net\nDirect Line: +1 (555) 019-2831\nEmployer: Microsoft Corporation\nOffice Address: 15 Maple Street, Apt 4B, Seattle, WA 98101\nUser Born on: 15/08/2002\nTaxpayer SSN: 219-45-7890\nCorporate Card: 3782 8224 6310 005\nAssigned Gateway: 172.16.254.1\nComments: Alex Mercer requested firewall port opening for server cluster. Next review on 01/09/2026.",
+      "ground_truth": [
+        {
+          "type": "PERSON",
+          "text": "Alex Mercer",
+          "start": 65,
+          "end": 76
+        },
+        {
+          "type": "EMAIL",
+          "text": "alex.mercer@cloudcorp.net",
+          "start": 91,
+          "end": 116
+        },
+        {
+          "type": "PHONE",
+          "text": "+1 (555) 019-2831",
+          "start": 130,
+          "end": 147
+        },
+        {
+          "type": "COMPANY",
+          "text": "Microsoft Corporation",
+          "start": 158,
+          "end": 179
+        },
+        {
+          "type": "ADDRESS",
+          "text": "15 Maple Street, Apt 4B, Seattle, WA 98101",
+          "start": 196,
+          "end": 238
+        },
+        {
+          "type": "DOB",
+          "text": "15/08/2002",
+          "start": 253,
+          "end": 263
+        },
+        {
+          "type": "SSN",
+          "text": "219-45-7890",
+          "start": 278,
+          "end": 289
+        },
+        {
+          "type": "CREDIT_CARD",
+          "text": "3782 8224 6310 005",
+          "start": 306,
+          "end": 324
+        },
+        {
+          "type": "IP_ADDRESS",
+          "text": "172.16.254.1",
+          "start": 343,
+          "end": 355
+        },
+        {
+          "type": "PERSON",
+          "text": "Alex Mercer",
+          "start": 366,
+          "end": 377
+        }
+      ]
+    }
+  ]
+}

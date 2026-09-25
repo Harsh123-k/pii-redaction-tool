@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PII Redaction Tool</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-content">
+        <div class="logo-group">
+          <div class="logo-icon">🛡️</div>
+          <div>
+            <h1>PII Redaction Tool</h1>
+            <p class="subtitle">Secure, Format-Preserving PII Detection & Synthetic Replacement</p>
+          </div>
+        </div>
+        <div class="header-badges">
+          <span class="badge badge-success">● System Ready</span>
+          <span class="badge badge-info">v1.0.0</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- Entity Capabilities Overview -->
+      <section class="card">
+        <h2>Supported PII Categories</h2>
+        <p class="description">Detects structured and unstructured PII entities across 9 categories using regex patterns and spaCy NER.</p>
+        <div class="entity-chips">
+          {% for entity in supported_types %}
+            <span class="entity-chip chip-{{ entity.lower() }}">{{ entity }}</span>
+          {% endfor %}
+        </div>
+      </section>
+
+      <!-- Document Upload & Processing -->
+      <section class="card upload-section">
+        <h2>Redact Document</h2>
+        <p class="description">Upload support ticket documents (.docx or .txt up to {{ max_file_size_mb }} MB) to redact sensitive personal data.</p>
+        
+        <form id="upload-form" class="upload-form">
+          <div class="drop-zone" id="drop-zone">
+            <div class="drop-zone-icon">📄</div>
+            <div class="drop-zone-prompt">
+              <strong>Click to upload</strong> or drag and drop your file here
+            </div>
+            <div class="file-hint">Supported formats: DOCX, TXT</div>
+            <input type="file" id="file-input" name="file" accept=".docx,.txt" class="file-input">
+          </div>
+
+          <div id="file-details" class="file-details hidden">
+            <span class="selected-filename" id="selected-filename"></span>
+            <button type="submit" id="submit-btn" class="btn btn-primary">Redact Document</button>
+          </div>
+        </form>
+
+        <div id="loading-spinner" class="loading-state hidden">
+          <div class="spinner"></div>
+          <p>Detecting entities and applying synthetic replacements...</p>
+        </div>
+
+        <div id="results-panel" class="results-panel hidden">
+          <div class="results-header">
+            <h3>Redaction Summary</h3>
+            <a id="download-btn" class="btn btn-success" href="#" download>⬇ Download Redacted File</a>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-num" id="stat-total">0</span>
+              <span class="stat-label">Total PII Redacted</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-num" id="stat-time">0.0s</span>
+              <span class="stat-label">Processing Time</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-num" id="stat-status">Success</span>
+              <span class="stat-label">Redaction Status</span>
+            </div>
+          </div>
+
+          <h4>Entity Breakdown</h4>
+          <div id="breakdown-grid" class="breakdown-grid"></div>
+        </div>
+      </section>
+
+      <!-- Benchmark Evaluation -->
+      <section class="card">
+        <div class="evaluation-header">
+          <div>
+            <h2>Benchmark Evaluation</h2>
+            <p class="description">Evaluate system accuracy, precision, recall, and F1-score against ground-truth support ticket logs.</p>
+          </div>
+          <button id="run-eval-btn" class="btn btn-secondary">Run Benchmark</button>
+        </div>
+
+        <div id="eval-loading" class="loading-state hidden">
+          <div class="spinner"></div>
+          <p>Evaluating against ground-truth annotations...</p>
+        </div>
+
+        <div id="eval-results" class="eval-results hidden">
+          <div id="eval-table-container"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>PII Redaction Tool &bull; Enterprise-grade Privacy Protection &bull; Zero Data Leakage</p>
+    </footer>
+  </div>
+
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const fileDetails = document.getElementById('file-details');
+    const selectedFilename = document.getElementById('selected-filename');
+    const uploadForm = document.getElementById('upload-form');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const resultsPanel = document.getElementById('results-panel');
+    const downloadBtn = document.getElementById('download-btn');
+    const statTotal = document.getElementById('stat-total');
+    const statTime = document.getElementById('stat-time');
+    const breakdownGrid = document.getElementById('breakdown-grid');
+    const runEvalBtn = document.getElementById('run-eval-btn');
+    const evalLoading = document.getElementById('eval-loading');
+    const evalResults = document.getElementById('eval-results');
+    const evalTableContainer = document.getElementById('eval-table-container');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files.length > 0) {
+        fileInput.files = e.dataTransfer.files;
+        handleFileSelect();
+      }
+    });
+
+    fileInput.addEventListener('change', handleFileSelect);
+
+    function handleFileSelect() {
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        selectedFilename.textContent = `Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        fileDetails.classList.remove('hidden');
+        resultsPanel.classList.add('hidden');
+      }
+    }
+
+    uploadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!fileInput.files.length) return;
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      loadingSpinner.classList.remove('hidden');
+      resultsPanel.classList.add('hidden');
+
+      try {
+        const resp = await fetch('/upload', { method: 'POST', body: formData });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.detail || 'Redaction failed');
+
+        statTotal.textContent = data.total_detected;
+        statTime.textContent = `${data.processing_time_sec}s`;
+        downloadBtn.href = data.download_url;
+        downloadBtn.setAttribute('download', data.output_filename);
+
+        breakdownGrid.innerHTML = '';
+        for (const [type, count] of Object.entries(data.breakdown)) {
+          const item = document.createElement('div');
+          item.className = 'breakdown-item';
+          item.innerHTML = `<span class="type-name">${type}</span><span class="type-count">${count}</span>`;
+          breakdownGrid.appendChild(item);
+        }
+
+        resultsPanel.classList.remove('hidden');
+      } catch (err) {
+        alert(`Error: ${err.message}`);
+      } finally {
+        loadingSpinner.classList.add('hidden');
+      }
+    });
+
+    runEvalBtn.addEventListener('click', async () => {
+      evalLoading.classList.remove('hidden');
+      evalResults.classList.add('hidden');
+
+      try {
+        const resp = await fetch('/evaluate');
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.detail || 'Evaluation failed');
+
+        // Convert markdown table to HTML table
+        const lines = data.markdown_table.trim().split('\n');
+        let html = '<table class="eval-table"><thead><tr>';
+        const headers = lines[0].split('|').map(s => s.trim()).filter(s => s);
+        headers.forEach(h => { html += `<th>${h}</th>`; });
+        html += '</tr></thead><tbody>';
+
+        for (let i = 2; i < lines.length; i++) {
+          const cols = lines[i].split('|').map(s => s.trim()).filter(s => s);
+          if (!cols.length) continue;
+          const isOverall = cols[0].includes('OVERALL');
+          html += `<tr class="${isOverall ? 'row-overall' : ''}">`;
+          cols.forEach(c => {
+            const cleanText = c.replace(/\*\*/g, '');
+            html += `<td>${cleanText}</td>`;
+          });
+          html += '</tr>';
+        }
+        html += '</tbody></table>';
+
+        evalTableContainer.innerHTML = html;
+        evalResults.classList.remove('hidden');
+      } catch (err) {
+        alert(`Evaluation error: ${err.message}`);
+      } finally {
+        evalLoading.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
