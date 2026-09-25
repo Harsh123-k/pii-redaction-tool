@@ -17,8 +17,6 @@ The application is deployed and publicly accessible on Render:
 
 👉 **Live Web Application:** [https://pii-redaction-tool-jfdr.onrender.com](https://pii-redaction-tool-jfdr.onrender.com)  
 
-> **Note:** The live deployment runs on Render's free tier. If the service has been idle, the initial request may take a few moments to spin up.
-
 ---
 
 ## Table of Contents
