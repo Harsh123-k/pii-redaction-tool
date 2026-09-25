@@ -3,6 +3,7 @@
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688.svg)](https://fastapi.tiangolo.com/)
 [![spaCy](https://img.shields.io/badge/spaCy-3.7%2B-09A3D5.svg)](https://spacy.io/)
+[![Render](https://img.shields.io/badge/Render-Live%20Demo-brightgreen.svg)](https://pii-redaction-tool-jfdr.onrender.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Tests Passing](https://img.shields.io/badge/Tests-32%20Passed-brightgreen.svg)]()
 
@@ -10,8 +11,20 @@ An enterprise-ready, format-preserving Personally Identifiable Information (PII)
 
 ---
 
+## 🌐 Live Demo
+
+The application is deployed and publicly accessible on Render:
+
+👉 **Live Web Application:** [https://pii-redaction-tool-jfdr.onrender.com](https://pii-redaction-tool-jfdr.onrender.com)  
+🏥 **Health Check API:** [https://pii-redaction-tool-jfdr.onrender.com/api/health](https://pii-redaction-tool-jfdr.onrender.com/api/health)
+
+> **Note:** The live deployment runs on Render's free tier. If the service has been idle, the initial request may take a few moments to spin up.
+
+---
+
 ## Table of Contents
 
+- [Live Demo](#-live-demo)
 - [Key Features](#key-features)
 - [Supported PII Categories](#supported-pii-categories)
 - [Tech Stack](#tech-stack)
